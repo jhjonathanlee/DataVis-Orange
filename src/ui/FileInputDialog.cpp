@@ -18,6 +18,8 @@ void FileInputDialog::on_okCancelButtons_accepted() {
 	} else {
 		accept();
 	}
+
+    ui.filenameText->clear();
 }
 
 void FileInputDialog::on_browseButton_clicked() {

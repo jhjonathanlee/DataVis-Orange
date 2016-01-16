@@ -12,6 +12,7 @@ class TeachingDashboardWindow : public DashboardWindow {
 
  public:
 	TeachingDashboardWindow(const QString &csv_filename);
+    TeachingDashboardWindow(QList<TeachingRecord> records, const QString &csv_filename);
 	
  protected:
 	virtual void updateTreeWidget();

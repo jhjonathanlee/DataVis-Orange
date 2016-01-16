@@ -12,6 +12,7 @@ class PublicationDashboardWindow : public DashboardWindow {
 
  public:
     PublicationDashboardWindow(const QString &csv_filename);
+    PublicationDashboardWindow(QList<PublicationRecord> records, const QString &csv_filename);
 	
  protected:
 	virtual void updateTreeWidget();

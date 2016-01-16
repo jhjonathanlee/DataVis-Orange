@@ -31,6 +31,23 @@ QString shortProgramName(QString program) {
 				  .replace("Continuing Medical Education", "CME", Qt::CaseInsensitive);
 }
 
+TeachingDashboardWindow::TeachingDashboardWindow(QList<TeachingRecord> records, const QString &csv_filename) {
+    this->records = records;
+    ui.treeWidget->setHeaderLabels(QStringList() <<
+                        "" << "Program Level" << "Academic Year" << "Faculty Name" << "Activity Type" << "Hours" << "Students" << "");
+
+    ui.titleLabel->setText("Teaching Summary, Department of " + records[0].primaryDomain);
+    ui.statusbar->showMessage("Read " + QString::number(records.size()) + " records from " + csv_filename);
+    setWindowTitle("Teaching - " + records[0].primaryDomain + " - " + csv_filename);
+
+    QPair<QDate, QDate> dateInterval = findDateRangeStartEnd(records);
+    ui.startDateSelector->setDate(dateInterval.first);
+    ui.endDateSelector->setDate(dateInterval.second);
+
+    updateDateLabel();
+    updateTreeWidget();
+}
+
 TeachingDashboardWindow::TeachingDashboardWindow(const QString &csv_filename) {
 	TeachingParser parser;
 	

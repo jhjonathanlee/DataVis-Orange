@@ -16,6 +16,23 @@
 
 static const int totalNumColumn = 4;
 
+PublicationDashboardWindow::PublicationDashboardWindow(QList<PublicationRecord> records, const QString &csv_filename) {
+    this->records = records;
+    ui.treeWidget->setHeaderLabels(QStringList() <<
+                        "" << "Publication Type" << "Faculty Name" << "Title" << "Total #" << "");
+
+    ui.titleLabel->setText("Publication Summary, Department of " + records[0].primaryDomain);
+    ui.statusbar->showMessage("Read " + QString::number(records.size()) + " records from " + csv_filename);
+    setWindowTitle("Publication - " + records[0].primaryDomain + " - " + csv_filename);
+
+    QPair<QDate, QDate> dateInterval = findDateRange(records);
+    ui.startDateSelector->setDate(dateInterval.first);
+    ui.endDateSelector->setDate(dateInterval.second);
+
+    updateDateLabel();
+    updateTreeWidget();
+}
+
 PublicationDashboardWindow::PublicationDashboardWindow(const QString &csv_filename) {
 	PublicationParser parser;
 

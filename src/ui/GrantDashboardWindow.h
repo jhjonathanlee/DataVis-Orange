@@ -12,6 +12,7 @@ class GrantDashboardWindow : public DashboardWindow {
 
  public:
 	GrantDashboardWindow(const QString &csv_filename);
+    GrantDashboardWindow(QList<GrantRecord> records, const QString &csv_filename);
 	
  protected:
 	virtual void updateTreeWidget();

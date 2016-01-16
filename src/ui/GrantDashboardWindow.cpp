@@ -34,6 +34,23 @@ QString moneyToStr(double amount) {
 	return QLocale("en").toCurrencyString(amount);
 }
 
+GrantDashboardWindow::GrantDashboardWindow(QList<GrantRecord> records, const QString &csv_filename) {
+    this->records = records;
+    ui.treeWidget->setHeaderLabels(QStringList() <<
+                        "" << "Funding Type" << "Funding Description" << "Faculty Name" << "Title" << "Total #" << "Total $" << "");
+
+    ui.titleLabel->setText("Grant/Funding Summary, Department of " + records[0].primaryDomain);
+    ui.statusbar->showMessage("Read " + QString::number(records.size()) + " records from " + csv_filename);
+    setWindowTitle("Grant - " + records[0].primaryDomain + " - " + csv_filename);
+
+    QPair<QDate, QDate> dateInterval = findDateRangeStartEnd(records);
+    ui.startDateSelector->setDate(dateInterval.first);
+    ui.endDateSelector->setDate(dateInterval.second);
+
+    updateDateLabel();
+    updateTreeWidget();
+}
+
 GrantDashboardWindow::GrantDashboardWindow(const QString &csv_filename) {
 	GrantParser parser;
 	

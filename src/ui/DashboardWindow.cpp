@@ -8,6 +8,9 @@
 #include <QPrintDialog>
 #include <QFileDialog>
 #include <QtGlobal>
+#include <QList>
+#include <QString>
+#include <QMessageBox>
 #include <stdexcept>
 
 #include "FileInputDialog.h"
@@ -17,6 +20,14 @@
 #include "GrantDashboardWindow.h"
 #include "PublicationDashboardWindow.h"
 #include "ui_DashboardWindow.h"
+#include "../parser/PresentationParser.h"
+#include "../parser/GrantParser.h"
+#include "../parser/PublicationParser.h"
+#include "../parser/TeachingParser.h"
+#include "../records/PresentationRecord.h"
+#include "../records/GrantRecord.h"
+#include "../records/PublicationRecord.h"
+#include "../records/TeachingRecord.h"
 
 DashboardWindow::DashboardWindow() {
     ui.setupUi(this);
@@ -29,25 +40,70 @@ DashboardWindow::DashboardWindow() {
 
 DashboardWindow *DashboardWindow::makeDashboard() {
 	FileInputDialog inputDialog;
-	if (inputDialog.exec() == QDialog::Accepted) {
+
+    PresentationParser presParser;
+    GrantParser grantParser;
+    PublicationParser pubParser;
+    TeachingParser teachParser;
+
+    while (inputDialog.exec() == QDialog::Accepted) {
+
+        QString csv = inputDialog.getFilename();
+
 		if (inputDialog.getSubjectArea() == Presentation) {
-			return new PresentationDashboardWindow(inputDialog.getFilename());
+            QList<PresentationRecord> records;
+
+            try {
+                records = presParser.parse(csv);
+            } catch (const std::exception &e) {
+                //qDebug() << e.what();
+                QMessageBox::critical(NULL, "Error", "A fatal error occurred while parsing the CSV file");
+                continue;
+            }
+            return new PresentationDashboardWindow(records, csv);
         }
         else if (inputDialog.getSubjectArea() == Teaching) {
-            return new TeachingDashboardWindow(inputDialog.getFilename());
+            QList<TeachingRecord> records;
+
+            try {
+                records = teachParser.parse(csv);
+            } catch (const std::exception &e) {
+                //qDebug() << e.what();
+                QMessageBox::critical(NULL, "Error", "A fatal error occurred while parsing the CSV file");
+                continue;
+            }
+            return new TeachingDashboardWindow(records, csv);
         }
         else if (inputDialog.getSubjectArea() == Grants) {
-            return new GrantDashboardWindow(inputDialog.getFilename());
+            QList<GrantRecord> records;
+
+            try {
+                records = grantParser.parse(csv);
+            } catch (const std::exception &e) {
+                //qDebug() << e.what();
+                QMessageBox::critical(NULL, "Error", "A fatal error occurred while parsing the CSV file");
+                continue;
+            }
+            return new GrantDashboardWindow(records, csv);
         }
         else if (inputDialog.getSubjectArea() == Publications) {
-            return new PublicationDashboardWindow(inputDialog.getFilename());
+            QList<PublicationRecord> records;
+
+            try {
+                records = pubParser.parse(csv);
+            } catch (const std::exception &e) {
+                //qDebug() << e.what();
+                QMessageBox::critical(NULL, "Error", "A fatal error occurred while parsing the CSV file");
+                continue;
+            }
+            return new PublicationDashboardWindow(records, csv);
         }
         else {
 			throw std::invalid_argument("Unknown subject area");
 		}
-	} else {
-		return nullptr;
-	}
+    }
+
+    return nullptr;
 }
 
 void DashboardWindow::on_dateFilterButton_clicked() {

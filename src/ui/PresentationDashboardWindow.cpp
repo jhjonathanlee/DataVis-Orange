@@ -22,13 +22,13 @@ PresentationDashboardWindow::PresentationDashboardWindow(const QString &csv_file
 		records = parser.parse(csv_filename);
 	} catch (const std::exception &e) {
 		qDebug() << e.what();
-		QMessageBox::critical(this, "Error", "A fatal error occurred while parsing the CSV file");
-		exit(1);
+        QMessageBox::critical(this, "Error", "A fatal error occurred while parsing the CSV file");
+        exit(1);
 	}
 	
 	if (records.empty()) {
 		QMessageBox::critical(this, "Error", "The CSV file has no records");
-		exit(1);
+        exit(1);
 	}
 	
 	ui.treeWidget->setHeaderLabels(QStringList() << 
@@ -44,6 +44,23 @@ PresentationDashboardWindow::PresentationDashboardWindow(const QString &csv_file
 	
 	updateDateLabel();
 	updateTreeWidget();
+}
+
+PresentationDashboardWindow::PresentationDashboardWindow(QList<PresentationRecord> records, const QString &csv_filename) {
+    this->records = records;
+    ui.treeWidget->setHeaderLabels(QStringList() <<
+                        "" << "Presentation Type" << "Faculty Name" << "Title" << "Total #" << "");
+
+    ui.titleLabel->setText("Presentations Summary, Department of " + records[0].primaryDomain);
+    ui.statusbar->showMessage("Read " + QString::number(records.size()) + " records from " + csv_filename);
+    setWindowTitle("Presentations - " + records[0].primaryDomain + " - " + csv_filename);
+
+    QPair<QDate, QDate> dateInterval = findDateRange(records);
+    ui.startDateSelector->setDate(dateInterval.first);
+    ui.endDateSelector->setDate(dateInterval.second);
+
+    updateDateLabel();
+    updateTreeWidget();
 }
 
 void PresentationDashboardWindow::updateTreeWidget() {
