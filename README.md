@@ -1,3 +1,7 @@
-CS3307, team Orange ![Travis](https://api.travis-ci.com/st3phen/cs3307-orange.svg?token=FhpZM2emQLE9qeNqYA72&branch=master)
-===================
+Data aggregation and visualiation tool for clinical faculty career activities at Schulich School of Medecine and Dentistry as a course project. Sample data sets contain simulated data only.
 
+Usage/features:
+
+Double-click on facutly member names to open up a visualization for that faculty member
+Export/print the visualizations and aggregated data
+Reports on error rows (as defined in project specifications). These rows are not ignored.
