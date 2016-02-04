@@ -1,4 +1,4 @@
-Data aggregation and visualiation tool for clinical faculty career activities at Schulich School of Medecine and Dentistry as a course project. Sample data sets contain simulated data only.
+Data aggregation and visualiation tool for clinical faculty career activities as a course projec=. Sample data sets contain simulated data only.
 
 Usage/features:
 
